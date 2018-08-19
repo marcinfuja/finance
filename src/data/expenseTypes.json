@@ -1,0 +1,129 @@
+[
+    {
+      "value": "food",
+      "label": "Żywność",
+      "category": "daily"
+    },
+    {
+      "value": "restaurants",
+      "label": "Restauracje",
+      "category": "daily"
+    },
+    {
+
+      "value": "alcohol",
+      "label": "Alkohol",
+      "category": "daily"
+    },
+    {
+
+      "value": "cigarettes",
+      "label": "Papierosy",
+      "category": "daily"
+    },
+    {
+      "value": "stuff",
+      "label": "Sprzęt / Książki / Kultura / Muzyka",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "medical",
+      "label": "Leki / Usługi medyczne",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "debt",
+      "label": "Zwrot długów",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "sports-aside",
+      "label": "Sport poza MS",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "car",
+      "label": "Auto - paliwo / myjnia / naprawy / ubezpieczenie / taksówki",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "trips",
+      "label": "Podróże",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "hygiene",
+      "label": "Higiena i kosmetyki",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "other",
+      "label": "Inne",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "clothing",
+      "label": "Ubrania",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "gifts",
+      "label": "Prezenty",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "services",
+      "label": "Usługi: fryzjer, pralnia itd",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "fines",
+      "label": "Mandaty, grzyzwny, kary",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "public-transportation",
+      "label": "Komunikacja / transport",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "holidays",
+      "label": "Wakacje",
+      "category": "miscellaneous"
+    },
+    {
+      "value": "rent",
+      "label": "Rachunki za mieszkanie",
+      "category": "cyclic"
+    },
+    {
+      "value": "savings-main",
+      "label": "Oszczędzanie",
+      "category": "cyclic"
+    },
+    {
+      "value": "savings-operational",
+      "label": "Rachunek operacyjny",
+      "category": "cyclic"
+    },
+    {
+      "value": "sports-subscription",
+      "label": "Sport - abonament",
+      "category": "cyclic"
+    },
+    {
+      "value": "phone",
+      "label": "Telefon",
+      "category": "cyclic"
+    },
+    {
+      "value": "savings-holidays",
+      "label": "Na wakacje",
+      "category": "cyclic"
+    },
+    {
+      "value": "savings-to-spend",
+      "label": "Na przyjemne i drogie",
+      "category": "cyclic"
+    }
+  ]
