@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Finance Logger",
+  "name": "App to log daily expenses",
   "icons": [
     {
       "src": "favicon.ico",

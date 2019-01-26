@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import moment from 'moment';
-import lodash from 'lodash';
 
 import Expenses from './data/expenseTypes.json';
 
@@ -17,6 +16,14 @@ import AddIcon from '@material-ui/icons/Add';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 
 var firebase = require("firebase/app");
@@ -35,13 +42,7 @@ var config = {
 
 firebase.initializeApp(config);
 
-const expenseTypesFB = firebase.database().ref().child('expenseTypes');
 const expensesFB = firebase.database().ref().child('expenses');
-
-expenseTypesFB.on('value', snap => {
-  // console.log(snap.val());
-});
-
 
 const marginTop = {
   marginTop: '20px'
@@ -52,6 +53,9 @@ const marginBottom = {
 const alignLeft = {
   textAlign: 'left'
 }
+const alignRight = {
+  textAlign: 'right'
+}
 
 const expenseTypesEnum = [
   'daily',
@@ -59,13 +63,16 @@ const expenseTypesEnum = [
   'cyclic'
 ]
 
+let expenseToDelete;
+
 class App extends Component {
   state = {
     value: 0,
     chosenExpenseCategory: 0,
     expenseType: '',
     expenseAmount: '',
-    expenses: []
+    expenses: [],
+    open: false
   };
 
   handleMainTabChange = (event, value) => {
@@ -89,20 +96,24 @@ class App extends Component {
   };
 
   handleSubmit() {
-    if (this.state.expenseType === '' && this.state.expenseAmount === 0) {
+    if (this.state.expenseType === '' || this.state.expenseAmount === '') {
       console.log('missing fields')
       return;
     }
-    const postData = {
-      expenseType: this.state.expenseType,
-      expenseAmount: this.state.expenseAmount,
-      date: moment().format('L')
-    };
 
     const newExpenseKey = firebase.database().ref().child('posts').push().key;
 
+    const postData = {
+      expenseType: this.state.expenseType,
+      expenseAmount: this.state.expenseAmount,
+      date: moment().format('L'),
+      key: newExpenseKey
+    };
+
+
     let updates = {};
     updates['/expenses/' + newExpenseKey] = postData;
+    console.log(newExpenseKey)
     
     this.setState({
       expenseType: '',
@@ -121,11 +132,25 @@ class App extends Component {
     );
   };
 
+  handleDelete = () => {
+    firebase.database().ref('expenses').child(expenseToDelete.key).remove();
+    this.handleClose();
+
+  };
+
+  handleClickOpen = (expense) => {
+    this.setState({ open: true });
+    expenseToDelete = expense;
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
+
   componentDidMount() {
     let currentLabel = '';
 
     expensesFB.on('child_added', data => {
-
       for (let i = 0; i < Expenses.length; i++) {
         if (Expenses[i].value === data.val().expenseType) {
           currentLabel = Expenses[i].label
@@ -138,20 +163,26 @@ class App extends Component {
             category: data.val().expenseType,
             amount: data.val().expenseAmount,
             date: data.val().date,
-            label: currentLabel
+            label: currentLabel,
+            key: data.val().key
           },
           ...this.state.expenses,
         ]        
       })
     });
-  }
+    
+    expensesFB.on('child_removed', data => {
+      console.log(data.val());
 
-  componentDidUpdate() {
-    console.log('expenses list', this.state.expenses);
+      this.setState({
+        expenses: this.state.expenses.filter((item) => item.key !== data.val().key)
+      })
+      console.log(this.state.expenses)
+    });
   }
 
   render() {
-    const { value, chosenExpenseCategory } = this.state;
+    const { chosenExpenseCategory } = this.state;
     const expenses = Expenses;
 
     return (
@@ -217,7 +248,13 @@ class App extends Component {
             <List dense>
               {this.state.expenses.map((expense, index) => (
                 <ListItem key={`item-${index}`}>
-                  <ListItemText primary={`${expense.label} ${expense.amount} zł`} secondary={`${expense.date}`} />
+                  <ListItemText style={{paddingRight: '0'}} primary={expense.label} secondary={`${expense.date}`} />
+                  <ListItemText style={{textAlign: 'right', paddingRight: '5em'}} primary={`${expense.amount} zł`} />
+                  <ListItemSecondaryAction>
+                    <IconButton aria-label="Delete" onClick={() => this.handleClickOpen(expense)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
                 </ListItem>
               ))}
             </List>
@@ -225,6 +262,22 @@ class App extends Component {
             </form>
           </Grid>
         </Grid>
+        <Dialog
+          open={this.state.open}
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">{"Usunąć?"}</DialogTitle>
+          <DialogActions>
+            <Button onClick={this.handleClose} color="primary">
+              Nie
+            </Button>
+            <Button onClick={this.handleDelete} color="primary" autoFocus>
+              Tak
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     );
   }
